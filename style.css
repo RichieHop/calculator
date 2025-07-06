@@ -1,0 +1,97 @@
+:root { 
+  /* Default colour variables. */
+  --primary-dark: rgb(3, 3, 3);
+  --primary-light: rgb(237, 237, 237);
+  --light-grey: rgb(174, 175, 177);
+  --key-background: rgb(84, 108, 155);
+  --function-key-background: rgb(0, 64, 128);
+  --output-background: rgb(0, 255, 128);
+}
+
+* {
+  background-color: var(--light-grey);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Roboto, sans-serif;
+}
+
+.calculator {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* border: 1px solid var(--primary-dark);
+  border-radius: 5px; */
+  height: 100vh;
+}
+
+.output {
+  Height: 75px;
+  Width: 300px;
+  border-radius: 5px;
+  background-color: var(--output-background);
+  margin-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  text-align: right;
+  align-content: center;
+}
+
+.mainOutput {
+  background-color: var(--output-background);
+  font-size: 30px;
+  font-weight: 600;
+  text-align: right;
+  align-content: center;
+}
+
+.historyOutput {
+  background-color: var(--output-background);
+  margin-bottom: 5px;
+  font-size: 10px;
+  text-align: right;
+  align-content: center;
+}
+
+.functionKey {
+  color: var(--primary-light);
+  background-color: var(--function-key-background);
+}
+
+#buttonEquals {
+  width: 154px;
+}
+
+#buttonDummy {
+  visibility: hidden;
+}
+
+button {
+  padding: 2px;
+  border: 1px solid var(--primary-dark);
+  border-radius: 5px;
+  margin: 2px 0px;
+  width: 75px;
+  height: 75px;
+  font-size: 24px;
+  font-weight: 500;
+  background-color: var(--key-background);
+}
+
+button.active {
+  background-color: var(--primary-dark);
+  color: var(--primary-light);
+}
+
+button,
+input[type='color'] {
+  transition: transform 0.1s ease-in-out;
+}
+
+button:hover,
+input[type='color']:hover {
+  transform: scale(1.10);
+}
