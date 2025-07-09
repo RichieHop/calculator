@@ -18,29 +18,28 @@
 <body>
     <div class="calculator">
         <div class="output">
-            <div class="historyOutput">1,234,567,890,123.99<br></div>
-            <div class="mainOutput">1,234,567,890,123.99</div>
+            <div class="mainOutput" id="mainOutput"> </div>
         </div>
-        <div class="calcKeys" id="calcKeys"  draggable="false">
-            <button id="button7">7</button>
-            <button id="button8">8</button>
-            <button id="button9">9</button>
-            <button class="functionKey" id="buttonPlus">+</button><br>
-            <button id="button4">4</button>
-            <button id="button5">5</button>
-            <button id="button6">6</button>
-            <button class="functionKey" id="buttonMinus">-</button><br>
-            <button id="button1">1</button>
-            <button id="button2">2</button>
-            <button id="button3">3</button>
-            <button class="functionKey" id="buttonDivide">/</button><br>
-            <button id="button0">0</button>
-            <button id="buttonDecimalPoint">.</button>
+        <div class="calcKeys" id="calcKeys">
+            <button class="numberButton" onclick="appendNumber('7')">7</button>
+            <button class="numberButton" onclick="appendNumber('8')">8</button>
+            <button class="numberButton" onclick="appendNumber('9')">9</button>
+            <button class="buttonOperator" onclick="appendOperator('+')">+</button><br>
+            <button class="numberButton" onclick="appendNumber('4')">4</button>
+            <button class="numberButton" onclick="appendNumber('5')">5</button>
+            <button class="numberButton" onclick="appendNumber('6')">6</button>
+            <button class="buttonOperator" onclick="appendOperator('-')">-</button><br>
+            <button class="numberButton" onclick="appendNumber('1')">1</button>
+            <button class="numberButton" onclick="appendNumber('2')">2</button>
+            <button class="numberButton" onclick="appendNumber('3')">3</button>
+            <button class="buttonOperator" onclick="appendOperator('/')">/</button><br>
+            <button class="numberButton" onclick="appendNumber('0')">0</button>
+            <button class="numberButton" id="buttonDecimalPoint" onclick="appendNumber('.')">.</button>
             <button id="buttonDummy">D</button>
-            <button class="functionKey" id="buttonMultiply">*</button><br>
-            <button class="functionKey" id="buttonEquals">=</button>
-            <button class="functionKey" id="buttonClear">C</button>
-            <button class="functionKey" id="buttonDel">DEL</button>
+            <button class="buttonOperator" onclick="appendOperator('*')">*</button><br>
+            <button class="buttonEqual" id="buttonEquals" onclick="calculate()">=</button>
+            <button class="buttonClear" onclick="clearDisplay()">C</button>
+            <button class="buttonDel" onclick="delKey()">DEL</button>
         </div>    
     </div>
 </body>

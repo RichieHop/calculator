@@ -5,7 +5,8 @@
   --light-grey: rgb(174, 175, 177);
   --key-background: rgb(84, 108, 155);
   --function-key-background: rgb(0, 64, 128);
-  --output-background: rgb(0, 255, 128);
+  --output-background: rgb(209, 137, 28);
+  --equals-background: rgb(79, 182, 73);
 }
 
 * {
@@ -23,15 +24,13 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  /* border: 1px solid var(--primary-dark);
-  border-radius: 5px; */
   height: 100vh;
 }
 
 .output {
   Height: 75px;
   Width: 300px;
-  border-radius: 5px;
+  border-radius: 10px;
   background-color: var(--output-background);
   margin-bottom: 5px;
   padding-left: 5px;
@@ -42,27 +41,22 @@ body {
 
 .mainOutput {
   background-color: var(--output-background);
-  font-size: 30px;
-  font-weight: 600;
+  font-size: 28px;
+  font-weight: 500;
   text-align: right;
   align-content: center;
+  height: 65px;
 }
 
-.historyOutput {
-  background-color: var(--output-background);
-  margin-bottom: 5px;
-  font-size: 10px;
-  text-align: right;
-  align-content: center;
-}
-
-.functionKey {
+.buttonOperator,.buttonClear,.buttonDel{
   color: var(--primary-light);
   background-color: var(--function-key-background);
 }
 
 #buttonEquals {
   width: 154px;
+  color: var(--primary-dark);
+  background-color: var(--equals-background);
 }
 
 #buttonDummy {

@@ -1,133 +1,109 @@
-const sketchContainerDiv = document.querySelector('.sketchContainer');
-const colourPicker = document.getElementById('colourPicker')
-const colourButton = document.getElementById('colourButton')
-const randomColourButton = document.getElementById('randomColourButton')
-const eraserButton = document.getElementById('eraserButton')
-const clearButton = document.getElementById('clearButton')
-const toggleGridButton = document.getElementById('toggleGridButton')
-const grid = document.getElementById('grid')
-const spinButton = document.querySelector('.spin-button');
-const input = spinButton.querySelector('input');
+let currentInput = '';
+let currentOperator = '';
+let previousInput = '';
 
-let currentGridSize = 16;
-let currentColor = '#000000';
-let currentMode = 'colour';
-
-setCurrentMode(currentMode);
-
-function setCurrentColor(newColor) {
-  currentColor = newColor
-}
-
-function setCurrentMode(newMode) {
-  activateButton(newMode)
-  currentMode = newMode
-}
-
-function setCurrentSize(newSize) {
-  currentGridSize = newSize
-}
-
-// Check for settings and mode button presses.
-colourPicker.oninput = (e) => setCurrentColor(e.target.value)
-colourButton.onclick = () => setCurrentMode('colour')
-randomColourButton.onclick = () => setCurrentMode('randomcolour')
-eraserButton.onclick = () => setCurrentMode('eraser')
-clearButton.onclick = () => setupGrid(currentGridSize)
-toggleGridButton.onclick = () => {toggleGridLines();}
-
-// Check for change of grid size spin button.
-spinButton.addEventListener('change', (event) => {
-  currentGridSize = parseInt(event.target.value);
-  if (currentGridSize > 100) {
-    currentGridSize = 100;
-    event.target.value = 100;
+function appendNumber(number) {
+    if (currentInput.length > 13) return; // Limit to max 14 chars
+    currentInput += number;
+    document.getElementById('mainOutput').textContent = `${previousInput} ${currentOperator} ${currentInput}`;
+    if (number === ".") { // Disable decimal point for current input after use.
+        var buttonDecimalPoint = document.getElementById('buttonDecimalPoint').removeAttribute("onclick");
+        return; 
     }
-  setupGrid(currentGridSize);
-});
-
-let mouseDown = false;
-
-document.onmousedown = () => (mouseDown = true);
-document.onmouseup = () => (mouseDown = false);
-
-function clearGrid() {
-  sketchContainerDiv.innerHTML = '';
 }
 
-// Initialise the grid; defaults to 16 x 16 on startup.
-function setupGrid(size) {
-  clearGrid();
-
-  for (let i = 0; i < (size * size) + (size +1); i++) {
-  const div = document.createElement('div');
-  div.addEventListener('mouseover', changeColor);
-  div.addEventListener('mousedown', changeColor);
-  
-  // Set the width and height of each element as 640 divided by the current size (so 40px for a 16 by 16 grid).
-  // This helps ensure the grid dimensions are mostly consistent, although it sometimes varies slightly.
-  const widthAndHeight = (640 / size) + "px"; 
-  div.setAttribute("style", "width:" + widthAndHeight +"; height:" + widthAndHeight + "; background-color: white");
-  sketchContainerDiv.appendChild(div);
-  }
-
-  // Need to set the value for the nth Child based on the grid size, then set the width, border and height.
-  const nthChildElement = currentGridSize + 1;
-  const gridElements = document.querySelectorAll(".sketchContainer>div:nth-child(" + nthChildElement + "n + 1)");
-  for (x = 0; x < gridElements.length; x++) {
-    gridElements[x].style.width = "100%";
-    gridElements[x].style.border = "0";
-    gridElements[x].style.height = "0";
-  }
-
-  colourPicker.value = currentColor;
-  toggleGridLines()
-
+function appendOperator(operator) {
+    if (currentInput === '') return;
+    var buttonDecimalPoint = document.getElementById('buttonDecimalPoint').setAttribute("onclick", "appendNumber('.')"); //Re-enable the decimal point.
+    if (previousInput !== '') { // Calculate the previous operation before appending a new one if previousInput contains something.
+        calculate(); 
+    }
+    currentOperator = operator;
+    previousInput = currentInput;
+    currentInput = '';
+    document.getElementById('mainOutput').textContent = `${previousInput} ${currentOperator}`;
 }
 
-function changeColor(e) {
-  if (e.type === 'mouseover' && !mouseDown) return
-  e.target.style.backgroundColor = "black";
-  if (currentMode === 'randomcolour') {
-    const randomR = Math.floor(Math.random() * 256)
-    const randomG = Math.floor(Math.random() * 256)
-    const randomB = Math.floor(Math.random() * 256)
-    e.target.style.backgroundColor = `rgb(${randomR}, ${randomG}, ${randomB})`
-  } else if (currentMode === 'colour') {
-    e.target.style.backgroundColor = currentColor
-  } else if (currentMode === 'eraser') {
-    e.target.style.backgroundColor = '#fefefe'
-  }
+function calculate() {
+    if (previousInput === '' || currentInput === '') return;
+    let result;
+    let prev = parseFloat(previousInput);
+    let current = parseFloat(currentInput);
+
+    switch (currentOperator) {
+        case '+':
+            result = prev + current;
+            if (String(result).length > 15) result = result.toExponential(4); // Convert to exponential notation if length > 15
+            break;
+        case '-':
+            result = prev - current;
+            if (String(result).length > 15) result = result.toExponential(4); // Convert to exponential notation if length > 15
+            break;
+        case '*':
+            result = prev * current;
+            if (String(result).length > 15) result = result.toExponential(4); // Convert to exponential notation if length > 15
+            break;
+        case '/':
+            if (current === 0) {
+                alert("You can't divide by zero");
+                clearDisplay();
+                return;
+            }
+            result = prev / current;
+            if (String(result).length > 15) result = result.toExponential(4); // Convert to exponential notation if length > 15
+            break;
+        default:
+            return;
+    }
+
+    currentInput = result.toString();
+    currentOperator = '';
+    previousInput = '';
+    document.getElementById('mainOutput').textContent = currentInput;
 }
 
-function activateButton(newMode) {
-  if (currentMode === 'randomcolour') {
-    randomColourButton.classList.remove('active')
-  } else if (currentMode === 'colour') {
-    colourButton.classList.remove('active')
-  } else if (currentMode === 'eraser') {
-    eraserButton.classList.remove('active')
-  }
-
-  if (newMode === 'randomcolour') {
-    randomColourButton.classList.add('active')
-  } else if (newMode === 'colour') {
-    colourButton.classList.add('active')
-  } else if (newMode === 'eraser') {
-    eraserButton.classList.add('active')
-  }
+function clearDisplay() {
+    currentInput = '';
+    previousInput = '';
+    currentOperator = '';
+    document.getElementById('mainOutput').textContent = '';
+    var buttonDecimalPoint = document.getElementById('buttonDecimalPoint').setAttribute("onclick", "appendNumber('.')"); //Re-enable the decimal point.
 }
 
-// Toggle grid lines.
-function toggleGridLines() {
-  const gridElements = document.querySelectorAll(".sketchContainer>div");
-  for (i = 0; i < gridElements.length; i++) {
-    gridElements[i].classList.toggle('border');
-  }
+function delKey() {
+    if (document.getElementById('mainOutput').textContent === "") return; // Do nothing if the mainDisplayContent is already blank.
+    if (currentInput.substring(currentInput.length - 1) === ".") { // Re-enable the decimal point if that was the last deleted value.
+        var buttonDecimalPoint = document.getElementById('buttonDecimalPoint').setAttribute("onclick", "appendNumber('.')");
+    }
+    currentInput = currentInput.substring(0, currentInput.length - 1); // Delete the last character from currentInput.
+    document.getElementById('mainOutput').textContent = `${previousInput} ${currentOperator} ${currentInput}`;
 }
 
-window.onload = () => {
-  // Load the grid with the default settings.
-  document.getElementById('gridInputValue').value = currentGridSize;
-  setupGrid(currentGridSize);
-}
+// Add a listener for key presses.
+document.addEventListener('keydown', (event) => {
+    // Prevent Firefox quick search from triggering if '/' pressed on either the full keyboard or numeric keypad.
+    // Keycode is deprecated, but using Code doesn't allow prevention of default behaviour for the relevant keys.
+    if (event.keyCode===191 || event.keyCode===111) event.preventDefault();
+    //   if (event.Code==="NumpadDivide" || event.Code==="Slash") event.preventDefault();
+
+    switch (event.key) {
+        case '0': case '1': case '2': case '3': case '4': case '5': case '6': case '7': case '8': case '9': case ".":
+           appendNumber(event.key);
+           break;
+        case '+': case '-': case '/': case '*':
+            appendOperator(event.key);
+            break;
+        case '=':
+            calculate();
+            break;
+        case 'Delete': case 'Backspace':
+            delKey();
+            break;
+        case 'C': case 'c':
+            clearDisplay();
+            break;
+        default:
+            return;
+    }
+  }
+)
